@@ -3,9 +3,14 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 module.exports = function () {
-  const db = 'mongodb://AngularDev80:onelinecoder23@ds139295.mlab.com:39295/meal-vote';
+  const db = config.get('db');
 
-  console.log('Connecting to database.');
+  if (!db) {
+    console.log('MongoDB private key is not defined.');
+    process.exit(1);
+  }
+
+  console.log('Connecting to database. .' + db);
 
   mongoose.connect(db, {
     useCreateIndex: true,
