@@ -72,7 +72,10 @@ function saveUser(user, res) {
       const token = jwt.sign(userDetails, process.env.JWT_KEY);
 
 
-      return res.status(201).json({token: token});
+      return res.status(201).json({
+        message: 'Account created success.',
+        token: token
+      });
     })
     .catch((err) => {
       console.log('Failed to create user: ' + err);
