@@ -1,16 +1,19 @@
-const config = require('config');
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
+
 module.exports = function () {
-  const db = config.get('db');
+
+  const db = process.env.MLAB_DB_CONNECT;
 
   if (!db) {
-    console.log('MongoDB private key is not defined.');
+    console.log('Database private key is not defined.');
     process.exit(1);
   }
 
-  console.log('Connecting to database. .' + db);
+  console.log('Connecting to database.');
 
   mongoose.connect(db, {
     useCreateIndex: true,

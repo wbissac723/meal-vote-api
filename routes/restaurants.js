@@ -1,13 +1,15 @@
 'use strict';
 
-const config = require('config');
+const env = require('dotenv');
 const express = require('express');
 const request = require('request-promise-native')
 const _ = require('lodash');
 
 const router = express.Router();
 
-const bearerToken = config.get('foodkey');
+env.config();
+
+const bearerToken = process.env.YELP_KEY;
 
 if (!bearerToken) {
   console.log('Yelp api key is not defined.');
@@ -37,20 +39,20 @@ router.post('/', async (req, res) => {
     });
 });
 
- var transformResponse = (data) => {
-    const jsonObj = JSON.parse(data);
-    let transformedResponse  = [];
+var transformResponse = (data) => {
+  const jsonObj = JSON.parse(data);
+  let transformedResponse = [];
 
-    _.each(jsonObj.businesses,(value) => {
-      transformedResponse.push(
-        _.pick(value,[
-          'name','rating','image_url','is_closed',
-          'location.display_address','display_phone',
-          'url'
-        ]));
-    });
+  _.each(jsonObj.businesses, (value) => {
+    transformedResponse.push(
+      _.pick(value, [
+        'name', 'rating', 'image_url', 'is_closed',
+        'location.display_address', 'display_phone',
+        'url'
+      ]));
+  });
 
-    return transformedResponse;
- }
+  return transformedResponse;
+}
 
 module.exports = router;
