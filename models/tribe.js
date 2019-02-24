@@ -14,17 +14,13 @@ const tribeSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 3,
-        maxlength: 40,
-        unique: true
-
+        maxlength: 40
     },
     tribeCreator: {
         type: String,
         required: true,
         minlength: 3,
-        maxlength: 40,
-        unique: true
-
+        maxlength: 40
     }
 });
 
