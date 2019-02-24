@@ -7,6 +7,7 @@ const helmet = require('helmet');
 // Routes
 const restaurants = require('../routes/restaurants');
 const users = require('../routes/users');
+const tribes = require('../routes/tribes');
 
 
 module.exports = function (app) {
@@ -18,4 +19,5 @@ module.exports = function (app) {
   app.use(cors());
   app.use('/api/restaurants', restaurants);
   app.use('/api/users', users);
+  app.use('/api/tribes', tribes);
 }
