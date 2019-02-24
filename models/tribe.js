@@ -38,7 +38,7 @@ function validateTribe(tribe) {
         tribeCreator: Joi.string().min(3).max(40).required()
     }
 
-    return Joi.validate(user, schema);
+    return Joi.validate(tribe, schema);
 }
 
 

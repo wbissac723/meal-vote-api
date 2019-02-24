@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
     _id: new mongoose.Types.ObjectId(),
     tribeName: req.body.tribeName,
     tribeCreator: req.body.tribeCreator,
-    tribeMemeber: req.body.tribeMember
+    tribeMember: req.body.tribeMember
   });
 
 
