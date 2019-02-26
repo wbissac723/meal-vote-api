@@ -11,8 +11,25 @@ const router = express.Router();
 const { Tribe, validate } = require('../models/tribe');
 
 
+// Get all tribes 
+router.get('/', (req, res) => {
+
+  Tribe.find()
+    .then((data) => {
+      console.log('Successfully retrieved all tribes.');
+
+      return res.status(200).send(data);
+    })
+    .catch((err) => {
+      console.log('Error occured ' + err);
+
+      return res.status(500).json({message: "Internal server error occured."})
+    });
+});
+
+
 // Add a new user to the database
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
 
   // Validate new user request body against userSchema
   const { error } = validate(req.body);
@@ -25,7 +42,7 @@ router.post('/', async (req, res) => {
   let tribe;
 
   // Verify user does not already exist by checking email
-  tribe = await Tribe.findOne({tribeName: req.body.tribeName})
+  tribe = Tribe.findOne({tribeName: req.body.tribeName})
     .then((group) => {
 
       // Return bad request if user already exists
