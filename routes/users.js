@@ -13,7 +13,7 @@ const { User, validate } = require('../models/user');
 
 
 // Add a new user to the database
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
 
   // Validate new user request body against userSchema
   const { error } = validate(req.body);
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
   let user;
 
   // Verify user does not already exist by checking email
-  user = await User.findOne({
+  user = User.findOne({
       email: req.body.email
     })
     .then((account) => {
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
     })
     .catch((err) => {
       return res.status(500).json({
-        message: 'Internal server error.'
+        message: 'Internal server error.', error: err
       });
     });
 
@@ -70,20 +70,23 @@ router.post('/', async (req, res) => {
   saveUser(user, res);
 });
 
-router.get('/:email', (req, res) => {
+router.get('/profile', (req, res) => {
 
   User.find()
     .then((users) => {
 
       let userProfile = users.filter((user) => user.email === req.body.email);
 
-      // TODO need to filter out properties...not working correctly
-      const filteredUser = _.pick(userProfile, ['userName', 'email', 'tribe', 'favoriteSpot']);
+      const user = _.pick(userProfile[0], ['userName', 'email', 'tribe', 'favoriteSpot']);
 
-      res.status(200).send(userProfile);
+      res.status(200).send(user);
+
+      console.log('Successful retrieved user ' + JSON.stringify(user, null, 2));
     })
     .catch((err) => {
-      console.log('err ' + err)
+      res.status(500).json({message: 'Internal server error occured.', error: err});
+
+      console.log('Unable to find user. ' + err)
     });
 });
 

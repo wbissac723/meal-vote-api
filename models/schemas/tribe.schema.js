@@ -11,8 +11,7 @@ const tribeSchema = mongoose.Schema({
     type: String,
     required: true,
     minlength: 3,
-    maxlength: 40,
-    unique: true
+    maxlength: 40
   },
   members: {
     type: [membersSchema],
@@ -22,8 +21,7 @@ const tribeSchema = mongoose.Schema({
     type: String,
     required: true,
     minlength: 3,
-    maxlength: 40,
-    unique: false
+    maxlength: 40
   }
 });
 
