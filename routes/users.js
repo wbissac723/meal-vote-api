@@ -19,9 +19,7 @@ const {
 router.post('/', async (req, res) => {
 
   // Validate new user request body against userSchema
-  const {
-    error
-  } = validate(req.body);
+  const { error } = validate(req.body);
 
   // Request does not match userSchema
   if (error) {
@@ -65,7 +63,9 @@ router.post('/', async (req, res) => {
   user = new User({
     _id: new mongoose.Types.ObjectId(),
     userName: req.body.userName,
-    email: req.body.email
+    email: req.body.email,
+    tribe: req.body.tribe,
+    favoriteSpot: req.body.favoriteSpot
   });
 
 
