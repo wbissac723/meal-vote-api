@@ -9,10 +9,7 @@ const _ = require('lodash');
 // Initialize the router
 const router = express.Router();
 
-const {
-  User,
-  validate
-} = require('../models/user');
+const { User, validate } = require('../models/user');
 
 
 // Add a new user to the database
@@ -71,6 +68,23 @@ router.post('/', async (req, res) => {
 
   // Store user in the database
   saveUser(user, res);
+});
+
+router.get('/:email', (req, res) => {
+
+  User.find()
+    .then((users) => {
+
+      let userProfile = users.filter((user) => user.email === req.body.email);
+
+      // TODO need to filter out properties...not working correctly
+      const filteredUser = _.pick(userProfile, ['userName', 'email', 'tribe', 'favoriteSpot']);
+
+      res.status(200).send(userProfile);
+    })
+    .catch((err) => {
+      console.log('err ' + err)
+    });
 });
 
 
