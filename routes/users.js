@@ -70,7 +70,7 @@ router.post('/', (req, res) => {
   saveUser(user, res);
 });
 
-router.get('/profile', (req, res) => {
+router.post('/profile', (req, res) => {
 
   User.find()
     .then((users) => {
