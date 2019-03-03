@@ -5,48 +5,35 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 
-
 // Initialize the router
 const router = express.Router();
+// Imports from the User model
+const { User, validate } = require('../models/user');
 
-const {
-  User,
-  validate
-} = require('../models/user');
-
-
-// Add a new user to the database
+// Stores a new user in the database
 router.post('/', (req, res) => {
-
   // Validate new user request body against userSchema
-  const {
-    error
-  } = validate(req.body);
+  const { error } = validate(req.body);
 
   // Request does not match userSchema
   if (error) {
-    return res.status(400).json({
-      message: error.details[0].message
-    });
+    return res.status(400).json({message: error.details[0].message});
   }
 
   let user;
 
   // Verify user does not already exist by checking email
-  user = User.findOne({
-      email: req.body.email
-    })
+  user = User.findOne({email: req.body.email})
     .then((account) => {
-
-      // Return bad request if user already exists
+      // Return JWT token for registered user
       if (account) {
-
+        // Get userName and email values from User
         const userDetails = _.pick(user, ['userName', 'email']);
 
-        // Generate JWT
+        // Generate JWT with userName and email
         const token = jwt.sign(userDetails, process.env.JWT_KEY);
 
-
+        // Send response to the client
         return res.send({
           code: 204,
           message: 'Existing user login success.',
@@ -62,7 +49,7 @@ router.post('/', (req, res) => {
     });
 
 
-  // Create a new user from the request body properties
+  // Create new User from the request body properties
   user = new User({
     _id: new mongoose.Types.ObjectId(),
     userName: req.body.userName,
@@ -101,8 +88,6 @@ router.post('/profile', (req, res) => {
       console.log('Unable to find user. ' + err)
     });
 });
-
-
 
 router.patch('/', (req, res) => {
 
