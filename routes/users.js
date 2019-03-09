@@ -6,31 +6,24 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 
 const router = express.Router();
-const {
-  User,
-  validate
-} = require('../models/user');
+const { User, validate } = require('../models/user');
+const{removeIdProperty } = require('./util/util');
 
 // Stores a new user in the database
 router.post('/', async (req, res) => {
   // Validate new user request body against userSchema
-  const {
-    error
-  } = validate(req.body);
+  const { error } = validate(req.body);
 
   // Request does not match userSchema
-  if (error) return res.status(400).json({
-    message: error.details[0].message
-  });
+  if (error) return res.status(400).json({message: error.details[0].message});
 
   // Verify user does not already exist by checking email
   let user = await User.findOne({email: req.body.email})
+
   try {
     if (user && user.email) {
-      // Account already exists
-      return res.status(400).json({message: 'Account already exists'});
+      return res.status(400).json({message: 'User already exists.'});
     }
-
   } catch (ex) {
     return res.status(500).json({message: ex});
   }
@@ -47,12 +40,19 @@ router.post('/', async (req, res) => {
     try {
       console.log(`Successfully created user ${user.userName}.`);
 
-      const userProfile = _.pick(user, ['userName', 'email', 'tribe', 'favoriteSpot']);
+
+
+
+
+
       // Generate JWT
+      const userProfile = _.pick(user, ['userName', 'email', 'tribe', 'favoriteSpot']);
       const token = jwt.sign(userProfile, process.env.JWT_KEY);
 
+      const profile = removeIdProperty(user);
+
       return res.status(201).json({
-        user: userProfile,
+        user: profile,
         message: 'Account created success.',
         token: token
       });
